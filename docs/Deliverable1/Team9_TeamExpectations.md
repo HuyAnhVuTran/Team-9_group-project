@@ -46,8 +46,9 @@ Outline how the team will strive to care for the health of each other and the te
 
 | Group Member | Group Role | Scope of Role |
 |-------------|-----------|--------------|
+| Kyle Chandrasena| Member | Collaborating on project |
 | Yuri Matienzo | Member | Collaborating on project |
-| Huy Anh Vu Tran | Member | Contribute to the project |
+| Huy Anh Vu Tran | Member | Collaborating to the project |
 
 ## Deliverables & Deadlines
 
@@ -68,6 +69,7 @@ If team members cannot add signatures in person, a group can agree that each mem
 
 | Team Member’s Name | Team Member’s Signature |
 |--------------------|------------------------|
+| Kyle Chandrasena|  |
 | Yuri Matienzo | Matienzo |
 | Huy Anh Vu Tran | Vu |
 
