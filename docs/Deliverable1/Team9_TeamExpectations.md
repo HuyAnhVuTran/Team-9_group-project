@@ -20,10 +20,13 @@ Include group members’ preferred and backup choices for communication and list
 
 ## Ground Rules
 
-These define what group members expect from one another and what norms they agree on relating to behaviours and actions.
+These define what group members expect from one another and what norms they agree on relating to behaviors and actions.
 
 ### Communication
 - Give regular updates on changes, schedule, workload, etc.
+- Use Discord as the primary for of group communication
+- Aim to respond to messages within 48 hours
+- Hold Discord voice chat for real-time meetings for discussions on progress or issues
 
 ### Meetings
 - Have group calls once a week
