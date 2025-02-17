@@ -37,21 +37,18 @@ This paper explains how misinformation on COVID-19 spreads through Twitter and p
 
 ## Section 3: The Core Components of the Simulation  
 
-The closest **Mesa model** for simulating our phenomenon is the **Virus on a Network** model. This model effectively captures how misinformation spreads across social media, similar to how a virus propagates through a network. In our adaptation:
-
-- **Misinformation bots** act as infectious agents.
-- **Susceptible users** function as potential hosts.
-- **Fact-checkers** serve as intervention mechanisms that reduce the spread.
+The closest Mesa model for simulating our phenomenon is the Virus on a Network model. This model effectively captures how misinformation spreads across social media, similar to how a virus propagates through a network. In our adaptation, misinformation bots act as infectious agents, susceptible users function as potential hosts, and fact-checkers serve as intervention mechanisms that reduce the spread. Our simulation will incorporate 5 different entities that each represent various types of users on Twitter. By modifying the model, we can incorporate key entities that both amplify and counteract misinformation on Twitter, simulating the dynamics of misinformation outbreaks and the role of AI-to-AI interactions in sustaining fake news loops 
 
 ### **Entities**  
 
-- **Human Users**: General Twitter users engaging with COVID-19 discussions.
-- **Fact-Checkers**: Users in the Birdwatch Program (Community Notes) who verify claims.
-- **Susceptible Users**: Neutral users who can be influenced by misinformation.
-- **Misinformed Users**: Users who believe and spread false content.
-- **Resistant Users**: Users resistant to misinformation.
-- **Misinformation Bots**: Automated accounts spreading misleading content.
+- **Human Users**: These are people who used the Twitter social media platform during the COVID-19 Pandemic. Human users may interact with COVID-19 discussions on Twitter. These users are split into four specific entities that have different behaviors, roles, and goals on the platform
+- **Fact-Checkers**: These are Twitter users who participated in the Birdwatch Program (now Community Notes). They are given the authority to verify claims and provide context to misleading posts by submitting explanatory notes. If a note reaches a high approval rating, it appears with the misinformation content. This encourages public accountability by challenging misinformation and it increases transparency in fact-checking. Their role is to counter misinformation and educate users regarding false narratives.
 
+- **Susceptible Users**: These are Twitter users who can be influenced, manipulated, or deceived by information from external sources like misinformation, propaganda, or scams. Lacking the awareness or tools to critically assess credibility, they are the most vulnerable to misinformation. They can either become misinformed users (if influenced by bot-amplified content) or resistant users (if exposed to fact-checking). Their role is to act as neutral users on Twitter who have not yet formed strong opinions about COVID-19-related information.
+
+- **Misinformed Users**: These are Twitter users who believe, share, or engage with misleading content posted by misinformation bots or other misinformed users. Their actions (liking, commenting, sharing, etc.) contribute to the amplification of falsehoods. However, exposure to fact-checking may reverse their misinformation stance, making them resistant over time. Their role is to consume misinformation and possibly influence susceptible users.
+- **Resistant Users**: These are Twitter users who are reluctant to believe information posted on the platform without sufficient evidence. These users are not influenced by misinformation content shared by misinformation bots or misinformed users. They remain immune to bot-driven misinformation. Their role is to prevent misinformation spread by being reluctant to engage in false content
+- **Misinformation Bots**: For the purpose of this study, we will refer to this type of content amplification bot as Misinformation bots. These bots aim to spread misleading content about COVID-19, including false treatments. They amplify the visibility of misinformation by liking, sharing, retweeting, commenting, and reposting content on Twitter. These artificial visibility-boosting activities can manipulate the platform’s trending algorithms. Some of them are even programmed to interact with each other to simulate an organic human discourse to avoid detection by Twitter. These bots can act like viruses on a network, sending infectious misinformation that exploits user attention to spread content and mimic human behavior to avoid detection algorithms 
 ### **Affordances**  
 
 - **Metric Boosting**: Likes, upvotes, hashtags influencing ranking algorithms.
