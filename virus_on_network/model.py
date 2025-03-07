@@ -37,10 +37,18 @@ class VirusOnNetwork(Model):
         gain_resistance_chance=0.5,
         seed=None,
     ):
+
+        print("Custom VirusOnNetwork model is being used!")
+
         super().__init__(seed=seed)
         self.num_nodes = num_nodes
         prob = avg_node_degree / self.num_nodes
+        # self.G = nx.erdos_renyi_graph(n=self.num_nodes, p=prob)
+        # self.G = nx.connected_watts_strogatz_graph(n=self.num_nodes, k=max(2, int(prob * self.num_nodes)), p=0.1)
         self.G = nx.erdos_renyi_graph(n=self.num_nodes, p=prob)
+        while not nx.is_connected(self.G):
+            self.G = nx.erdos_renyi_graph(n=self.num_nodes, p=prob)
+        
         self.grid = mesa.space.NetworkGrid(self.G)
 
         self.initial_outbreak_size = (

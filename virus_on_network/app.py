@@ -2,7 +2,7 @@ import math
 
 import solara
 
-from mesa.examples.basic.virus_on_network.model import (
+from model import (
     State,
     VirusOnNetwork,
     number_infected,
@@ -105,6 +105,7 @@ StatePlot = make_plot_component(
 )
 
 model1 = VirusOnNetwork()
+print("Custom model instantiated:", model1)
 
 page = SolaraViz(
     model1,
