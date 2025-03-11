@@ -8,6 +8,8 @@ from model import (
     number_susceptible,
     number_resistant,
     number_fact_checkers,
+    number_userInfected,
+    number_botInfected,
 )
 
 
@@ -38,8 +40,9 @@ model_params = {
     "initial_outbreak_size": Slider(label="Initial Misinformed Size", value=1, min=1, max=10, step=1),
     "virus_spread_chance": Slider(label="Misinformation Spread Chance", value=0.4, min=0.0, max=1.0, step=0.1),
     "virus_check_frequency": Slider(label="Fact Check Frequency", value=0.4, min=0.0, max=1.0, step=0.1),
-    "recovery_chance": Slider(label="Recovery Chance", value=0.3, min=0.0, max=1.0, step=0.1),
-    "gain_resistance_chance": Slider(label="Gain Resistance Chance", value=0.5, min=0.0, max=1.0, step=0.1),
+    # "recovery_chance": Slider(label="Recovery Chance", value=0.3, min=0.0, max=1.0, step=0.1),
+    # "gain_resistance_chance": Slider(label="Gain Resistance Chance", value=0.5, min=0.0, max=1.0, step=0.1),
+    "resistance_duration": Slider(label="Resistance Duration", value=6, min=1, max=10, step=1),
     "fact_checker_ratio": Slider(label="Fact Checker Ratio", value=0.1, min=0.0, max=1.0, step=0.1),
 }
 
@@ -55,15 +58,19 @@ StatePlot = make_plot_component(
     }
 )
 
-
-
+InfectionPlot = make_plot_component(
+    {
+        "User Misinformation Reproduction Rate": "#FFD700",  # Yellow
+        "Bot Misinformation Reproduction Rate": "#FF0000",   # Red
+    }
+)
 
 model = VirusOnNetwork()
 
 
 page = SolaraViz(
     model,
-    components=[SpacePlot, StatePlot],
+    components=[SpacePlot, StatePlot, InfectionPlot],
     model_params=model_params,
     name="Misinformation Model",
 )
