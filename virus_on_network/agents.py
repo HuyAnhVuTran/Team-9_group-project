@@ -1,10 +1,6 @@
 from enum import Enum
 from mesa import Agent
 
-# global variables
-userInfected = 0
-botInfected = 0
-
 class State(Enum):
     SUSCEPTIBLE = 0            # Users not yet exposed to misinformation
     MISINFORMED_USER = 1        # Users who believe and spread misinformation
@@ -39,7 +35,6 @@ class VirusAgent(Agent):
 
 
     def try_to_infect_neighbors(self):
-        global userInfected, botInfected  # global variables
         neighbors_nodes = self.model.grid.get_neighborhood(
             self.pos, include_center=False
         )

@@ -12,8 +12,6 @@ from model import (
     number_botInfected,
 )
 
-import agents
-
 
 from mesa.visualization import (
     Slider,
