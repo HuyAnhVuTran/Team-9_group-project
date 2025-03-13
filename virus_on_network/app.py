@@ -20,7 +20,9 @@ from mesa.visualization import (
     # make_space_component,
 )
 
-from local_mesa.visualization import (
+from localmesa.visualization import (
+    # Slider,
+    # SolaraViz,
     # make_plot_component,
     make_space_component,
 )
@@ -46,6 +48,7 @@ def agent_portrayal(agent):
         # portrayal["border_color"] = "black"
         # portrayal["border_width"] = 2  # Thickness of border
         portrayal["shape"] = "square"
+        portrayal["marker"] = "s"  # Square marker for misinformation bots
         portrayal["size"] = 20
 
     return portrayal
