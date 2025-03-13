@@ -17,6 +17,11 @@ from mesa.visualization import (
     Slider,
     SolaraViz,
     make_plot_component,
+    # make_space_component,
+)
+
+from local_mesa.visualization import (
+    # make_plot_component,
     make_space_component,
 )
 
@@ -29,7 +34,21 @@ def agent_portrayal(agent):
         State.RESISTANT: "#808080",           # Gray for resistant users
         State.FACT_CHECKER: "#0000FF",        # Blue for fact-checkers
     }
-    return {"color": node_color_dict[agent.state], "size": 10}
+    # return {"color": node_color_dict[agent.state], "size": 10}
+
+    portrayal = {
+        "color": node_color_dict[agent.state],
+        "size": 10,
+    }
+
+    # Add black border for misinformation bots
+    if agent.state == State.MISINFORMATION_BOT:
+        # portrayal["border_color"] = "black"
+        # portrayal["border_width"] = 2  # Thickness of border
+        portrayal["shape"] = "square"
+        portrayal["size"] = 20
+
+    return portrayal
 
 
 
