@@ -37,10 +37,16 @@ def number_botInfected(model):
     return model.botInfected
 
 def reproduction_userInfected(model):
-    return model.userInfected / number_misinformed(model)
+    num_misinformed = number_misinformed(model)
+    if num_misinformed == 0:
+        return 0  # Return a default value to avoid division by zero
+    return model.userInfected / num_misinformed
 
 def reproduction_botInfected(model):
-    return model.botInfected / number_misinformed(model)
+    num_misinformed = number_misinformed(model)
+    if num_misinformed == 0:
+        return 0  # Return a default value to avoid division by zero
+    return model.botInfected / num_misinformed
 
 
 
