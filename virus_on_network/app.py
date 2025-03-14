@@ -91,11 +91,30 @@ InfectionPlot = make_plot_component(
 model = VirusOnNetwork()
 
 
-page = SolaraViz(
-    model,
-    components=[SpacePlot, StatePlot, InfectionPlot],
-    model_params=model_params,
-    name="Misinformation Model",
-)
+# page = SolaraViz(
+#     model,
+#     components=[SpacePlot, StatePlot, InfectionPlot],
+#     model_params=model_params,
+#     name="Misinformation Model",
+# )
+
+@solara.component
+def Page():
+    with solara.Column():
+        solara.Markdown("## Disclaimer")
+        solara.Markdown("- Squares represent bot agents.")
+        solara.Markdown("- Circles represent human user agents.")
+
+        solara.Markdown("---") # Add a horizontal line to separate the disclaimer
+
+        page = SolaraViz(
+            model,
+            components=[SpacePlot, StatePlot, InfectionPlot],
+            model_params=model_params,
+            name="Misinformation Model",
+        )
+
+# Use the Page component as the main Solara page
+Page()
 
 
