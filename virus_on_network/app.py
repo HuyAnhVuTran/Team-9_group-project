@@ -59,13 +59,14 @@ def agent_portrayal(agent):
 model_params = {
     "num_nodes": Slider(label="Number of agents", value=50, min=10, max=200, step=1),
     "avg_node_degree": Slider(label="Avg Node Degree", value=3, min=1, max=10, step=1),
-    "initial_outbreak_size": Slider(label="Initial Misinformed Size", value=1, min=1, max=10, step=1),
+    "initial_misinformation_bots": Slider(label="Number of Misinformation Bots", value=1, min=1, max=10, step=1),
+    # "initial_fact_checkers": Slider(label="Number of Fact Checkers", value=1, min=1, max=10, step=1),
+    "fact_checker_ratio": Slider(label="Fact Checker Ratio", value=0.011, min=0.01, max=0.1, step=0.01),
     "virus_spread_chance": Slider(label="Misinformation Spread Chance", value=0.4, min=0.0, max=1.0, step=0.1),
     "virus_check_frequency": Slider(label="Fact Check Frequency", value=0.4, min=0.0, max=1.0, step=0.1),
     # "recovery_chance": Slider(label="Recovery Chance", value=0.3, min=0.0, max=1.0, step=0.1),
     # "gain_resistance_chance": Slider(label="Gain Resistance Chance", value=0.5, min=0.0, max=1.0, step=0.1),
     "resistance_duration": Slider(label="Resistance Duration", value=6, min=1, max=10, step=1),
-    "fact_checker_ratio": Slider(label="Fact Checker Ratio", value=0.1, min=0.0, max=1.0, step=0.1),
 }
 
 
