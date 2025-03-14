@@ -59,6 +59,8 @@ class VirusOnNetwork(Model):
         num_nodes=10,
         avg_node_degree=3,
         initial_outbreak_size=1,
+        initial_misinformation_bots=1,  # Add this parameter
+        # initial_fact_checkers=1,        # Add this parameter
         virus_spread_chance=0.4,
         virus_check_frequency=0.4,
         # recovery_chance=0.3,
@@ -93,14 +95,33 @@ class VirusOnNetwork(Model):
         )
 
 
-        for node in self.G.nodes():
-            if self.random.random() < fact_checker_ratio:
-                state = State.FACT_CHECKER
-            elif self.random.random() < misinformation_bot_ratio:
+        # for node in self.G.nodes():
+        #     if self.random.random() < fact_checker_ratio:
+        #         state = State.FACT_CHECKER
+        #     elif self.random.random() < misinformation_bot_ratio:
+        #         state = State.MISINFORMATION_BOT
+        #     else:
+        #         state = State.SUSCEPTIBLE
+
+        # Calculate the number of fact checkers based on the ratio and ensure at least one
+        initial_fact_checkers = max(1, int(fact_checker_ratio * self.num_nodes))
+
+        # Ensure at least one misinformation bot and one fact checker
+        nodes = list(self.G.nodes())
+        self.random.shuffle(nodes)
+
+        misinformation_bot_count = 0
+        fact_checker_count = 0
+
+        for i, node in enumerate(nodes):
+            if misinformation_bot_count < initial_misinformation_bots:
                 state = State.MISINFORMATION_BOT
+                misinformation_bot_count += 1
+            elif fact_checker_count < initial_fact_checkers:
+                state = State.FACT_CHECKER
+                fact_checker_count += 1
             else:
                 state = State.SUSCEPTIBLE
-
 
             a = VirusAgent(
                 self,
@@ -114,9 +135,9 @@ class VirusOnNetwork(Model):
             self.grid.place_agent(a, node)
 
 
-        infected_nodes = self.random.sample(list(self.G), initial_outbreak_size)
-        for a in self.grid.get_cell_list_contents(infected_nodes):
-            a.state = State.MISINFORMED_USER
+        # infected_nodes = self.random.sample(list(self.G), initial_outbreak_size)
+        # for a in self.grid.get_cell_list_contents(infected_nodes):
+        #     a.state = State.MISINFORMED_USER
 
 
         self.running = True
