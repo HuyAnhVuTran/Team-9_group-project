@@ -87,6 +87,7 @@ class VirusAgent(Agent):
         for a in misinformed_neighbors:
             if self.random.random() < self.virus_check_frequency:
                 a.state = State.RESISTANT
+                a.strain = None
                 a.resistance_counter = self.resistance_duration
 
 
@@ -102,6 +103,7 @@ class VirusAgent(Agent):
         for a in misinformed_neighbors:
             if self.random.random() < self.influence_chance:
                 a.state = State.RESISTANT
+                a.strain = None
                 a.resistance_counter = self.resistance_duration
 
     def step(self):
@@ -114,6 +116,7 @@ class VirusAgent(Agent):
             self.resistance_counter -= 1
             if self.resistance_counter <= 0:
                 self.state = State.SUSCEPTIBLE
+                self.strain = None
         # self.try_check_situation()
 
 
