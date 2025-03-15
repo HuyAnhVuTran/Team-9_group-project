@@ -8,6 +8,10 @@ class State(Enum):
     FACT_CHECKER = 3            # Users who actively fact-check misinformation
     MISINFORMATION_BOT = 4      # Misinformation bots that primarily spread falsehoods
 
+class Strain(Enum):
+    STRAIN_A = 0
+    STRAIN_B = 1
+    STRAIN_C = 2
 
 class VirusAgent(Agent):
     """Individual Agent definition and its properties/interaction methods."""
@@ -22,9 +26,12 @@ class VirusAgent(Agent):
         # recovery_chance,
         # gain_resistance_chance,
         resistance_duration,
+        initial_strain = None,
+        
     ):
         super().__init__(model)
         self.state = initial_state
+        self.strain = initial_strain
         self.virus_spread_chance = virus_spread_chance
         self.virus_check_frequency = virus_check_frequency
         self.influence_chance = virus_check_frequency * 0.7
@@ -46,6 +53,7 @@ class VirusAgent(Agent):
         for a in susceptible_neighbors:
             if self.random.random() < self.virus_spread_chance:
                 a.state = State.MISINFORMED_USER
+                a.strain = self.strain
                 if self.state is State.MISINFORMATION_BOT:
                     self.model.botInfected += 1
                     # print(f"Bot infected: {botInfected}")

@@ -4,6 +4,7 @@ import solara
 from model import (
     State,
     VirusOnNetwork,
+    Strain,
     number_misinformed,
     number_susceptible,
     number_resistant,
@@ -43,13 +44,31 @@ def agent_portrayal(agent):
         "size": 10,
     }
 
-    # Add black border for misinformation bots
+    # Special handling for misinformation bots to use their strain color
     if agent.state == State.MISINFORMATION_BOT:
-        # portrayal["border_color"] = "black"
-        # portrayal["border_width"] = 2  # Thickness of border
-        portrayal["shape"] = "square"
-        portrayal["marker"] = "s"  # Square marker for misinformation bots
-        portrayal["size"] = 20
+        # Override with strain color if available
+        if hasattr(agent, 'strain'):  # Ensure the bot has a 'strain' attribute
+            if agent.strain == Strain.STRAIN_A:
+                portrayal["color"] = node_color_dict.get(Strain.STRAIN_A, "#FF4D4D")  # Red for strain A
+            elif agent.strain == Strain.STRAIN_B:
+                portrayal["color"] = node_color_dict.get(Strain.STRAIN_B, "#FF8C00")  # Orange for strain B
+            elif agent.strain == Strain.STRAIN_C:
+                portrayal["color"] = node_color_dict.get(Strain.STRAIN_C, "#FF66B2")  # Pink for strain C
+        
+        portrayal["marker"] = "s"
+        portrayal["size"] = 20  # Larger size for misinformation bots
+
+    # Special handling for misinformed users to use their strain color
+    if agent.state == State.MISINFORMED_USER:
+        # Override with strain color if available
+        if hasattr(agent, 'strain'):  # Ensure the user has a 'strain' attribute
+            if agent.strain == Strain.STRAIN_A:
+                portrayal["color"] = node_color_dict.get(Strain.STRAIN_A, "#FF4D4D")  # Red for strain A
+            elif agent.strain == Strain.STRAIN_B:
+                portrayal["color"] = node_color_dict.get(Strain.STRAIN_B, "#FF8C00")  # Orange for strain B
+            elif agent.strain == Strain.STRAIN_C:
+                portrayal["color"] = node_color_dict.get(Strain.STRAIN_C, "#FF66B2")  # Pink for strain C
+        
 
     return portrayal
 
@@ -74,7 +93,7 @@ SpacePlot = make_space_component(agent_portrayal)
 StatePlot = make_plot_component(
     {
         "Misinformation Bots": "#FF0000",  # Red
-        "Misinformed": "#FFD700",          # Yellow
+        "Total Misinformation": "#FFD700",          # Yellow
         "Susceptible": "#008000",          # Green
         "Resistant": "#808080",            # Gray
         "Fact Checkers": "#0000FF",        # Blue
@@ -85,6 +104,14 @@ InfectionPlot = make_plot_component(
     {
         "User Misinformation Reproduction Rate": "#FFD700",  # Yellow
         "Bot Misinformation Reproduction Rate": "#FF0000",   # Red
+    }
+)
+
+StrainPlot = make_plot_component(
+    {
+        "Misinformed (Strain A)": "#FF4D4D",  # Red
+        "Misinformed (Strain B)": "#FF8C00",  # Orange
+        "Misinformed (Strain C)": "#FF66B2",  # Pink
     }
 )
 
@@ -109,7 +136,7 @@ def Page():
 
         page = SolaraViz(
             model,
-            components=[SpacePlot, StatePlot, InfectionPlot],
+            components=[SpacePlot, StatePlot, InfectionPlot, StrainPlot],
             model_params=model_params,
             name="Misinformation Model",
         )
