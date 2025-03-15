@@ -2,7 +2,7 @@ import math
 import networkx as nx
 import mesa
 from mesa import Model
-from agents import State, VirusAgent
+from agents import State, VirusAgent, Strain
 
 # Function to count agents in a specific state
 def number_state(model, state):
@@ -39,10 +39,45 @@ def number_resistant(model):
 def number_fact_checkers(model):
     return number_state(model, State.FACT_CHECKER)
 
-def number_misinformation_bots(model):
-    return sum(1 for a in model.grid.get_all_cell_contents() if a.state in [State.MISINFORMATION_BOT, State.MISINFORMATION_BOT_2, State.MISINFORMATION_BOT_3])
 
-# Define Virus Model
+def number_userInfected(model):
+    return model.userInfected
+
+
+def number_botInfected(model):
+    return model.botInfected
+
+def reproduction_userInfected(model):
+    num_misinformed = number_misinformed(model)
+    if num_misinformed == 0:
+        return 0  # Return a default value to avoid division by zero
+    return model.userInfected / num_misinformed
+
+def reproduction_botInfected(model):
+    num_misinformed = number_misinformed(model)
+    if num_misinformed == 0:
+        return 0  # Return a default value to avoid division by zero
+    return model.botInfected / num_misinformed
+
+def number_strain(model, strain):
+    return sum(1 for a in model.grid.get_all_cell_contents() if a.strain is strain)
+
+def number_StrainA(model):
+    numA = number_strain(model, Strain.STRAIN_A)
+    print("number Strain A: ", numA)
+    return number_strain(model, Strain.STRAIN_A)
+
+def number_StrainB(model):
+    numB = number_strain(model, Strain.STRAIN_B)
+    print("number Strain B: ", numB)
+    return number_strain(model, Strain.STRAIN_B)
+
+def number_StrainC(model):
+    numC = number_strain(model, Strain.STRAIN_C)
+    print("number Strain C: ", numC)
+    return number_strain(model, Strain.STRAIN_C)
+
+
 class VirusOnNetwork(Model):
     """A misinformation spread model with all agent types."""
 
@@ -50,7 +85,9 @@ class VirusOnNetwork(Model):
         self,
         num_nodes=10,
         avg_node_degree=3,
-        initial_misinformation_bots=1,
+        initial_outbreak_size=1,
+        initial_misinformation_bots=3,  # Add this parameter
+        # initial_fact_checkers=1,        # Add this parameter
         virus_spread_chance=0.4,
         virus_check_frequency=0.4,
         resistance_duration=6,
@@ -72,13 +109,11 @@ class VirusOnNetwork(Model):
         # **Updated Data Collector with All Misinformed Counts**
         self.datacollector = mesa.DataCollector(
             {
-                "Misinformation Bots (Strain 1)": lambda m: number_state(m, State.MISINFORMATION_BOT),
-                "Misinformation Bots (Strain 2)": lambda m: number_state(m, State.MISINFORMATION_BOT_2),
-                "Misinformation Bots (Strain 3)": lambda m: number_state(m, State.MISINFORMATION_BOT_3),
-                "Misinformed": number_misinformed,  # Total misinformed count
-                "Misinformed (Strain 1)": number_misinformed_strain_1,
-                "Misinformed (Strain 2)": number_misinformed_strain_2,
-                "Misinformed (Strain 3)": number_misinformed_strain_3,
+                "Misinformation Bots": number_misinformation_bots,
+                "Total Misinformation": number_misinformed,
+                "Misinformed (Strain A)": number_StrainA,
+                "Misinformed (Strain B)": number_StrainB,
+                "Misinformed (Strain C)": number_StrainC,
                 "Susceptible": number_susceptible,
                 "Resistant": number_resistant,
                 "Fact Checkers": number_fact_checkers,
@@ -89,6 +124,8 @@ class VirusOnNetwork(Model):
 
         # Calculate the number of fact checkers based on the ratio, ensuring at least one
         initial_fact_checkers = max(1, int(fact_checker_ratio * self.num_nodes))
+
+        strains = [Strain.STRAIN_A, Strain.STRAIN_B, Strain.STRAIN_C]
 
         # Ensure at least one misinformation bot and one fact checker
         nodes = list(self.G.nodes())
@@ -112,13 +149,13 @@ class VirusOnNetwork(Model):
 
         # Assign other agents
         for i, node in enumerate(nodes):
+            strain = None  # Default strain to None
             if misinformation_bot_count < initial_misinformation_bots:
-                if misinformation_bot_count % 3 == 0:
-                    state = State.MISINFORMATION_BOT
-                elif misinformation_bot_count % 3 == 1:
-                    state = State.MISINFORMATION_BOT_2
+                state = State.MISINFORMATION_BOT
+                if misinformation_bot_count < len(strains):
+                    strain = strains[misinformation_bot_count]
                 else:
-                    state = State.MISINFORMATION_BOT_3
+                    strain = self.random.choice(strains)
                 misinformation_bot_count += 1
             elif fact_checker_count < initial_fact_checkers:
                 state = State.FACT_CHECKER
@@ -132,6 +169,7 @@ class VirusOnNetwork(Model):
                 virus_spread_chance,
                 virus_check_frequency,
                 resistance_duration,
+                strain
             )
             self.grid.place_agent(agent, node)
 

@@ -3,20 +3,34 @@ from mesa import Agent
 
 class State(Enum):
     SUSCEPTIBLE = 0            # Users not yet exposed to misinformation
-    MISINFORMED_USER = 1       # Users who believe and spread misinformation
-    RESISTANT = 2              # Users resistant to misinformation
-    FACT_CHECKER = 3           # Users who actively fact-check misinformation
-    MISINFORMATION_BOT = 4     # First strain of misinformation bots
-    MISINFORMATION_BOT_2 = 5   # Second strain of misinformation bots
-    MISINFORMATION_BOT_3 = 6   # Third strain of misinformation bots
+    MISINFORMED_USER = 1        # Users who believe and spread misinformation
+    RESISTANT = 2               # Users resistant to misinformation
+    FACT_CHECKER = 3            # Users who actively fact-check misinformation
+    MISINFORMATION_BOT = 4      # Misinformation bots that primarily spread falsehoods
 
+class Strain(Enum):
+    STRAIN_A = 0
+    STRAIN_B = 1
+    STRAIN_C = 2
 
 class VirusAgent(Agent):
     """Defines individual agents and their interactions."""
 
-    def __init__(self, model, initial_state, virus_spread_chance, virus_check_frequency, resistance_duration, name=None):
+    def __init__(
+        self,
+        model,
+        initial_state,
+        virus_spread_chance,
+        virus_check_frequency,
+        # recovery_chance,
+        # gain_resistance_chance,
+        resistance_duration,
+        initial_strain = None,
+        
+    ):
         super().__init__(model)
         self.state = initial_state
+        self.strain = initial_strain
         self.virus_spread_chance = virus_spread_chance
         self.virus_check_frequency = virus_check_frequency
         self.influence_chance = virus_check_frequency * 0.7
@@ -35,9 +49,8 @@ class VirusAgent(Agent):
         for a in susceptible_neighbors:
             if self.random.random() < self.virus_spread_chance:
                 a.state = State.MISINFORMED_USER
-                
-                # Assign the infection strain based on the infector
-                if self.state in [State.MISINFORMATION_BOT, State.MISINFORMATION_BOT_2, State.MISINFORMATION_BOT_3]:
+                a.strain = self.strain
+                if self.state is State.MISINFORMATION_BOT:
                     self.model.botInfected += 1
                     a.infecting_strain = self.state  # Track which bot strain infected the user
                 elif self.state == State.MISINFORMED_USER and self.infecting_strain:
