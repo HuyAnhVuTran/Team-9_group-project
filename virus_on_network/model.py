@@ -182,4 +182,6 @@ class VirusOnNetwork(Model):
         print(f"Step {stepCount}: User Infected Rate = {reproduction_userInfected(self):.2%}, Bot Infected Rate = {reproduction_botInfected(self):.2%}")
         self.userInfected = 0
         self.botInfected = 0
+
         stepCount += 1
+

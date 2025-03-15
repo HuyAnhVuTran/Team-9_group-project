@@ -122,3 +122,6 @@ class VirusAgent(Agent):
     #         self.state is State.MISINFORMED_USER
     #     ):
     #         self.try_remove_infection()
+
+
+
