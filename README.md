@@ -4,14 +4,6 @@
 
 ## Summary of the current implementation state
 
-This model is based on the NetLogo model "Virus on Network". It demonstrates the spread of a virus through a network and follows the SIR model, commonly seen in epidemiology.
-
-The SIR model is one of the simplest compartmental models, and many models are derivatives of this basic form. The model consists of three compartments:
-
-S: The number of susceptible individuals. When a susceptible and an infectious individual come into "infectious contact", the susceptible individual contracts the disease and transitions to the infectious compartment.
-I: The number of infectious individuals. These are individuals who have been infected and are capable of infecting susceptible individuals.
-R for the number of removed (and immune) or deceased individuals. These are individuals who have been infected and have either recovered from the disease and entered the removed compartment, or died. It is assumed that the number of deaths is negligible with respect to the total population. This compartment may also be called "recovered" or "resistant".
-
 Our simulation was developed using Mesa, a Python-based agent-based modeling framework. We built it as a modified version of the Virus on a Network model, specifically adapting it to simulate Twitter's information ecosystem. The model uses random activation scheduling, which means that agents act in random order during each step of the simulation, ensuring that the spread of misinformation occurs in an unpredictable manner—just like in real-world social media environments. It also utilizes various metrics such as reproduction rates, state counts, and strain distribution to monitor the emerging dynamics between bot and user agents in a network environment like Twitter.
 
 For more information about this model, read the NetLogo's web page: http://ccl.northwestern.edu/netlogo/models/VirusonaNetwork.
