@@ -2,7 +2,7 @@
 
 # Virus on a Network
 
-## Summary of the current implementation state
+## §A. Summary of the current implementation state
 
 Our simulation was developed using Mesa, a Python-based agent-based modeling framework. We built it as a modified version of the Virus on a Network model, specifically adapting it to simulate Twitter's information ecosystem. The model uses random activation scheduling, which means that agents act in random order during each step of the simulation, ensuring that the spread of misinformation occurs in an unpredictable manner—just like in real-world social media environments. It also utilizes various metrics such as reproduction rates, state counts, and strain distribution to monitor the emerging dynamics between bot and user agents in a network environment like Twitter.
 
@@ -10,7 +10,7 @@ For more information about this model, read the NetLogo's web page: http://ccl.n
 
 JavaScript library used in this example to render the network: [d3.js](https://d3js.org/).
 
-## Installation
+## §B. Installation and Run the simulation
 
 To install the dependencies use pip and the requirements.txt in this directory. e.g.
 
