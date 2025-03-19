@@ -30,7 +30,7 @@ To run the model interactively, in this directory, run the following command
     $ solara run app.py
 ```
 
-## Files
+## §C.Files
 
 * ``model.py``: Contains the agent class, and the overall model class.
 * ``agents.py``: Contains the agent class.
