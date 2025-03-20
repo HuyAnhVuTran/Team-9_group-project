@@ -78,8 +78,8 @@ class VirusOnNetwork(Model):
         initial_outbreak_size=1,
         initial_misinformation_bots=3,  # Add this parameter
         # initial_fact_checkers=1,        # Add this parameter
-        virus_spread_chance=0.4,
-        virus_check_frequency=0.4,
+        misinformation_spread_chance=0.4,
+        fact_check_chance=0.4,
         # recovery_chance=0.3,
         # gain_resistance_chance=0.5,
         resistance_duration=6,
@@ -153,8 +153,8 @@ class VirusOnNetwork(Model):
             a = VirusAgent(
                 self,
                 state,
-                virus_spread_chance,
-                virus_check_frequency,
+                misinformation_spread_chance,
+                fact_check_chance,
                 # recovery_chance,
                 # gain_resistance_chance,
                 resistance_duration,

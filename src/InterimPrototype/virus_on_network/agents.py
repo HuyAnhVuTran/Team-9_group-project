@@ -21,8 +21,8 @@ class VirusAgent(Agent):
         self,
         model,
         initial_state,
-        virus_spread_chance,
-        virus_check_frequency,
+        misinformation_spread_chance,
+        fact_check_chance,
         # recovery_chance,
         # gain_resistance_chance,
         resistance_duration,
@@ -32,9 +32,9 @@ class VirusAgent(Agent):
         super().__init__(model)
         self.state = initial_state
         self.strain = initial_strain
-        self.virus_spread_chance = virus_spread_chance
-        self.virus_check_frequency = virus_check_frequency
-        self.influence_chance = virus_check_frequency * 0.7
+        self.misinformation_spread_chance = misinformation_spread_chance
+        self.fact_check_chance = fact_check_chance
+        self.influence_chance = fact_check_chance * 0.7
         # self.recovery_chance = recovery_chance
         # self.gain_resistance_chance = gain_resistance_chance
         self.resistance_duration = resistance_duration
@@ -51,7 +51,7 @@ class VirusAgent(Agent):
             if agent.state is State.SUSCEPTIBLE
         ]
         for a in susceptible_neighbors:
-            if self.random.random() < self.virus_spread_chance:
+            if self.random.random() < self.misinformation_spread_chance:
                 a.state = State.MISINFORMED_USER
                 a.strain = self.strain
                 if self.state is State.MISINFORMATION_BOT:
@@ -85,7 +85,7 @@ class VirusAgent(Agent):
             if agent.state is State.MISINFORMED_USER
         ]
         for a in misinformed_neighbors:
-            if self.random.random() < self.virus_check_frequency:
+            if self.random.random() < self.fact_check_chance:
                 a.state = State.RESISTANT
                 a.strain = None
                 a.resistance_counter = self.resistance_duration
@@ -121,7 +121,7 @@ class VirusAgent(Agent):
 
 
     # def try_check_situation(self):
-    #     if (self.random.random() < self.virus_check_frequency) and (
+    #     if (self.random.random() < self.fact_check_chance) and (
     #         self.state is State.MISINFORMED_USER
     #     ):
     #         self.try_remove_infection()
