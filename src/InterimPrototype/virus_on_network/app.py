@@ -11,6 +11,7 @@ from model import (
     number_fact_checkers,
     number_userInfected,
     number_botInfected,
+    average_clustering_misinformed,
 )
 
 
@@ -72,7 +73,15 @@ def agent_portrayal(agent):
 
     return portrayal
 
+def get_resistant_susceptible_ratio(model):
+    ratio = model.resistant_susceptible_ratio()
+    ratio_text = r"$\infty$" if ratio is math.inf else f"{ratio:.2f}"
+    avg = str(average_clustering_misinformed(model))
+    infected_text = str(number_misinformed(model))
 
+    return solara.Markdown(
+        f"Average Clustering ratio: {avg}<br>Misinformed Remaining: {infected_text}"
+    )
 
 
 model_params = {
@@ -83,8 +92,7 @@ model_params = {
     "fact_checker_ratio": Slider(label="Fact Checker Ratio", value=0.011, min=0.01, max=0.1, step=0.01),
     "misinformation_spread_chance": Slider(label="Misinformation Spread Chance", value=0.4, min=0.0, max=1.0, step=0.1),
     "fact_check_chance": Slider(label="Fact Check Chance", value=0.4, min=0.0, max=1.0, step=0.1),
-    # "recovery_chance": Slider(label="Recovery Chance", value=0.3, min=0.0, max=1.0, step=0.1),
-    # "gain_resistance_chance": Slider(label="Gain Resistance Chance", value=0.5, min=0.0, max=1.0, step=0.1),
+  
     "resistance_duration": Slider(label="Resistance Duration", value=6, min=1, max=10, step=1),
 }
 
@@ -136,12 +144,10 @@ def Page():
 
         page = SolaraViz(
             model,
-            components=[SpacePlot, StatePlot, InfectionPlot, StrainPlot],
+            components=[SpacePlot, StatePlot, get_resistant_susceptible_ratio, InfectionPlot, StrainPlot],
             model_params=model_params,
             name="Misinformation Model",
         )
-
+    
 # Use the Page component as the main Solara page
 Page()
-
-

@@ -36,6 +36,9 @@ def number_userInfected(model):
 def number_botInfected(model):
     return model.botInfected
 
+def global_clustering(model):
+    return nx.average_clustering(model.G) # experimental clustering implementation
+
 def reproduction_userInfected(model):
     num_misinformed = number_misinformed(model)
     if num_misinformed == 0:
@@ -65,6 +68,15 @@ def number_StrainC(model):
     numC = number_strain(model, Strain.STRAIN_C)
     print("number Strain C: ", numC)
     return number_strain(model, Strain.STRAIN_C)
+
+def average_clustering_misinformed(model):
+    misinformed_nodes = [
+        agent.pos for agent in model.grid.get_all_cell_contents()
+        if agent.state == State.MISINFORMED_USER
+    ]
+    if not misinformed_nodes:
+        return 0
+    return nx.average_clustering(model.G, nodes=misinformed_nodes) #possible clustering imp
 
 
 class VirusOnNetwork(Model):
@@ -111,17 +123,12 @@ class VirusOnNetwork(Model):
                 "Fact Checkers": number_fact_checkers,
                 "User Misinformation Reproduction Rate": reproduction_userInfected,
                 "Bot Misinformation Reproduction Rate": reproduction_botInfected,
+                "Global Clustering Coefficient": global_clustering, #clustering coefficient
+                "Avg Clustering (Misinformed Users)": average_clustering_misinformed, #misinfo clusters
             }
         )
 
 
-        # for node in self.G.nodes():
-        #     if self.random.random() < fact_checker_ratio:
-        #         state = State.FACT_CHECKER
-        #     elif self.random.random() < misinformation_bot_ratio:
-        #         state = State.MISINFORMATION_BOT
-        #     else:
-        #         state = State.SUSCEPTIBLE
 
         # Calculate the number of fact checkers based on the ratio and ensure at least one
         initial_fact_checkers = max(1, int(fact_checker_ratio * self.num_nodes))
@@ -173,7 +180,14 @@ class VirusOnNetwork(Model):
         global stepCount
         stepCount = 0
 
-
+    def resistant_susceptible_ratio(self):
+        try:
+            return number_state(self, State.RESISTANT) / number_state(
+                self, State.SUSCEPTIBLE
+            )
+        except ZeroDivisionError:
+            return math.inf
+        
     def step(self):
         global stepCount
         self.agents.shuffle_do("step")
@@ -184,4 +198,3 @@ class VirusOnNetwork(Model):
         self.botInfected = 0
 
         stepCount += 1
-
