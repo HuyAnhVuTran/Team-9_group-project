@@ -196,12 +196,12 @@ class VirusOnNetwork(Model):
         self.botInfected = 0
 
         if self.random.random() < 0.1:
-            self.add_node_with_agent()
+            self.add_node()
         self.connect_nodes(delay=4)
         stepCount += 1
 
         
-    def add_node_with_agent(self):
+    def add_node(self):
         new_node_id = max(self.G.nodes) + 1
         self.G.add_node(new_node_id)
         self.G.nodes[new_node_id]["agent"] = []
