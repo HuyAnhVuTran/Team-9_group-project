@@ -1,10 +1,8 @@
 import math
 import networkx as nx
 import mesa
-
 from mesa import Model
 from agents import State, VirusAgent, Strain
-schedule =0
 def number_state(model, state):
     return sum(1 for a in model.grid.get_all_cell_contents() if a.state is state)
 
@@ -193,6 +191,7 @@ class VirusOnNetwork(Model):
     def step(self):
         global stepCount
         self.current_step = stepCount
+
         self.agents.shuffle_do("step")
         self.datacollector.collect(self)
         # Debugging statements to verify data collection
@@ -209,16 +208,7 @@ class VirusOnNetwork(Model):
     def add_node_with_agent(self):
         new_node_id = max(self.G.nodes) + 1
         self.G.add_node(new_node_id)
-
-      
         self.G.nodes[new_node_id]["agent"] = []
-
-        # Connect the new node to a random existing node
-     
-        # existing_node = self.random.choice(list(self.G.nodes - {new_node_id}))
-        # self.G.add_edge(new_node_id, existing_node)
-
-        # Update the grid with the new graph
         self.grid.G = self.G
 
         # Create and place a new agent
@@ -227,18 +217,16 @@ class VirusOnNetwork(Model):
             State.SUSCEPTIBLE,  # or any logic you want
             misinformation_spread_chance=0.4,
             fact_check_chance=0.4,
-            resistance_duration=6,
-           
+            resistance_duration=6, 
         )
         self.grid.place_agent(agent, new_node_id)
         self.agents.add(agent)
         self.new_nodes.append((new_node_id, self.current_step))
 
         print(f"🟡 Added isolated node {new_node_id} at step {self.current_step}")
-   
+    
     def connect_nodes(self, delay):
         still_pending = []
-
         for node_id, step_added in self.new_nodes:
             if self.current_step - step_added >= delay:
                 # Connect this node to a random existing one
@@ -246,13 +234,12 @@ class VirusOnNetwork(Model):
                 if candidates:
                     target = self.random.choice(candidates)
                     self.G.add_edge(node_id, target)
-                    print(f"🔗 Connected delayed node {node_id} to {target}")
+                    print(f" Connected delayed node {node_id} to {target}")
             else:
                 still_pending.append((node_id, step_added))
 
         # Keep only the ones not ready yet
         self.new_nodes = still_pending
 
-        # Update grid
         self.grid.G = self.G
 
