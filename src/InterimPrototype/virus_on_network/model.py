@@ -162,17 +162,13 @@ class VirusOnNetwork(Model):
                 state,
                 misinformation_spread_chance,
                 fact_check_chance,
-                # recovery_chance,
-                # gain_resistance_chance,
                 resistance_duration,
                 strain
             )
             self.grid.place_agent(a, node)
 
 
-        # infected_nodes = self.random.sample(list(self.G), initial_outbreak_size)
-        # for a in self.grid.get_cell_list_contents(infected_nodes):
-        #     a.state = State.MISINFORMED_USER
+
 
 
         self.running = True
@@ -214,7 +210,7 @@ class VirusOnNetwork(Model):
         # Create and place a new agent
         agent = VirusAgent(
             self,
-            State.SUSCEPTIBLE,  # or any logic you want
+            State.SUSCEPTIBLE,  
             misinformation_spread_chance=0.4,
             fact_check_chance=0.4,
             resistance_duration=6, 
