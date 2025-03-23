@@ -1,6 +1,7 @@
 import math
 import networkx as nx
 import mesa
+
 from mesa import Model
 from agents import State, VirusAgent, Strain
 
@@ -197,4 +198,35 @@ class VirusOnNetwork(Model):
         self.userInfected = 0
         self.botInfected = 0
 
+        if self.random.random() < 0.1:
+            self.add_node_with_agent()
         stepCount += 1
+
+        
+    def add_node_with_agent(self):
+        new_node_id = max(self.G.nodes) + 1
+        self.G.add_node(new_node_id)
+
+      
+        self.G.nodes[new_node_id]["agent"] = []
+
+        # Connect the new node to a random existing node
+        existing_node = self.random.choice(list(self.G.nodes - {new_node_id}))
+        self.G.add_edge(new_node_id, existing_node)
+
+        # Update the grid with the new graph
+        self.grid.G = self.G
+
+        # Create and place a new agent
+        agent = VirusAgent(
+            self,
+            State.SUSCEPTIBLE,  # or any logic you want
+            misinformation_spread_chance=0.4,
+            fact_check_chance=0.4,
+            resistance_duration=6,
+           
+        )
+        self.grid.place_agent(agent, new_node_id)
+        self.agents.add(agent)
+
+        print(f"Added new node {new_node_id}, connected to {existing_node} with agent ID {agent.unique_id}")
