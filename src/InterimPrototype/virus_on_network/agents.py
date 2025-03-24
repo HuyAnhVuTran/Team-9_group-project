@@ -105,6 +105,10 @@ class VirusAgent(Agent):
                 a.state = State.RESISTANT
                 a.strain = None
                 a.resistance_counter = self.resistance_duration
+    
+    def switch_strain(self, new_strain):
+        print(f"Bot switched from {self.strain} to {new_strain}")
+        self.strain = new_strain
 
     def step(self):
         if self.state in [State.MISINFORMED_USER, State.MISINFORMATION_BOT]:

@@ -140,6 +140,8 @@ class VirusOnNetwork(Model):
         super().__init__(seed=seed)
         self.new_nodes=[]
         self.current_step=0
+        self.strain_switch_counter = 0
+
         self.num_nodes = num_nodes
         prob = avg_node_degree / self.num_nodes
         self.userInfected = 0
@@ -228,6 +230,16 @@ class VirusOnNetwork(Model):
             )
         except ZeroDivisionError:
             return math.inf
+
+    def find_min_max_strains(self):
+        strain_counts = {
+            Strain.STRAIN_A: number_StrainA(self),
+            Strain.STRAIN_B: number_StrainB(self),
+            Strain.STRAIN_C: number_StrainC(self),
+        }
+        min_strain = min(strain_counts, key=strain_counts.get)
+        max_strain = max(strain_counts, key=strain_counts.get)
+        return min_strain, max_strain
         
     def step(self):
         global stepCount
@@ -242,6 +254,20 @@ class VirusOnNetwork(Model):
         if self.random.random() < 0.1:
             self.add_node()
         self.connect_nodes(delay=4)
+        
+        if self.strain_switch_counter % self.random.randint(3, 4) == 0:
+            min_strain, max_strain = self.find_min_max_strains()
+            bots_with_max_strain = [
+                agent
+                for agent in self.grid.get_all_cell_contents()
+                if agent.state == State.MISINFORMATION_BOT and agent.strain == max_strain
+            ]
+            if bots_with_max_strain:
+                bot_to_switch = self.random.choice(bots_with_max_strain)
+                bot_to_switch.switch_strain(min_strain)
+
+        self.strain_switch_counter += 1
+
         stepCount += 1
 
 
