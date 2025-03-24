@@ -40,6 +40,8 @@ from mesa.visualization.utils import force_update, update_counter
 if TYPE_CHECKING:
     from mesa.model import Model
 
+from model import get_model_metrics
+
 _mesa_logger = create_module_logger()
 
 
@@ -583,4 +585,11 @@ def make_initial_grid_layout(num_components):
 def ShowSteps(model):
     """Display the current step of the model."""
     update_counter.get()
-    return solara.Text(f"Step: {model.steps}")
+    # return solara.Text(f"Step: {model.steps}")
+    metrics = get_model_metrics(model)
+    return solara.Markdown(
+        f"Step: {metrics['step_count']}<br>"
+        f"Resistant/Susceptible Ratio: {metrics['ratio_text']}<br>"
+        f"Misinformed Cluster Strength (Louvain): {metrics['louvain_modularity_misinformed']:.2f}<br>"
+        f"Misinformed Remaining: {metrics['misinformed_count']}"
+    )

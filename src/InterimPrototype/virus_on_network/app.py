@@ -11,20 +11,20 @@ from model import (
     number_fact_checkers,
     number_userInfected,
     number_botInfected,
-    average_clustering_misinformed,
+    louvain_misinformed_modularity,
 )
 
 
 from mesa.visualization import (
     Slider,
-    SolaraViz,
+    # SolaraViz,
     make_plot_component,
     # make_space_component,
 )
 
 from localmesa.visualization import (
     # Slider,
-    # SolaraViz,
+    SolaraViz,
     # make_plot_component,
     make_space_component,
 )
@@ -144,7 +144,7 @@ def Page():
 
         page = SolaraViz(
             model,
-            components=[SpacePlot, StatePlot, get_resistant_susceptible_ratio, InfectionPlot, StrainPlot],
+            components=[SpacePlot, StatePlot, InfectionPlot, StrainPlot],
             model_params=model_params,
             name="Misinformation Model",
         )

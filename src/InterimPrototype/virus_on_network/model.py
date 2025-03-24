@@ -3,6 +3,8 @@ import networkx as nx
 import mesa
 from mesa import Model
 from agents import State, VirusAgent, Strain
+import community as community_louvain  # Import the community_louvain library
+
 
 
 def number_state(model, state):
@@ -56,27 +58,63 @@ def number_strain(model, strain):
 
 def number_StrainA(model):
     numA = number_strain(model, Strain.STRAIN_A)
-    print("number Strain A: ", numA)
+    # print("number Strain A: ", numA)
     return number_strain(model, Strain.STRAIN_A)
 
 def number_StrainB(model):
     numB = number_strain(model, Strain.STRAIN_B)
-    print("number Strain B: ", numB)
+    # print("number Strain B: ", numB)
     return number_strain(model, Strain.STRAIN_B)
 
 def number_StrainC(model):
     numC = number_strain(model, Strain.STRAIN_C)
-    print("number Strain C: ", numC)
+    # print("number Strain C: ", numC)
     return number_strain(model, Strain.STRAIN_C)
 
-def average_clustering_misinformed(model):
+# def average_clustering_misinformed(model):
+#     misinformed_nodes = [
+#         agent.pos for agent in model.grid.get_all_cell_contents()
+#         if agent.state == State.MISINFORMED_USER
+#     ]
+#     if not misinformed_nodes:
+#         return 0
+#     return nx.average_clustering(model.G, nodes=misinformed_nodes) #possible clustering imp
+
+def louvain_misinformed_modularity(model):
+    """Calculates the modularity of Misinformed User clusters using Louvain algorithm."""
     misinformed_nodes = [
         agent.pos for agent in model.grid.get_all_cell_contents()
         if agent.state == State.MISINFORMED_USER
     ]
     if not misinformed_nodes:
         return 0
-    return nx.average_clustering(model.G, nodes=misinformed_nodes) #possible clustering imp
+
+    misinformed_subgraph = model.G.subgraph([node for node in model.grid.G.nodes if node in misinformed_nodes])
+
+    if not misinformed_subgraph.edges():
+        return 0
+
+    partition = community_louvain.best_partition(misinformed_subgraph)
+    modularity = community_louvain.modularity(partition, misinformed_subgraph)
+
+    print(f"Number of Misinformed Nodes: {len(misinformed_subgraph.nodes)}")
+    print(f"Number of Misinformed Edges: {len(misinformed_subgraph.edges)}")
+    print(f"Louvain Modularity for Misinformed Users: {modularity}")
+    return modularity
+
+def get_model_metrics(model):
+    ratio = model.resistant_susceptible_ratio()
+    ratio_text = r"$\infty$" if ratio is math.inf else f"{ratio:.2f}"
+    louvain_modularity_misinformed = louvain_misinformed_modularity(model)
+    misinformed_count = number_misinformed(model)
+    step_count = model.steps
+
+    return {
+        "step_count": step_count,
+        "ratio_text": ratio_text,
+        "louvain_modularity_misinformed": louvain_modularity_misinformed,
+        "misinformed_count": misinformed_count,
+    }
 
 
 class VirusOnNetwork(Model):
@@ -124,7 +162,8 @@ class VirusOnNetwork(Model):
                 "User Misinformation Reproduction Rate": reproduction_userInfected,
                 "Bot Misinformation Reproduction Rate": reproduction_botInfected,
                 "Global Clustering Coefficient": global_clustering, #clustering coefficient
-                "Avg Clustering (Misinformed Users)": average_clustering_misinformed, #misinfo clusters
+                # "Avg Clustering (Misinformed Users)": average_clustering_misinformed, #misinfo clusters
+                "Misinformed Cluster Strength (Louvain)": louvain_misinformed_modularity,
             }
         )
 
