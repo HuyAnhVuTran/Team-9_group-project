@@ -149,7 +149,8 @@ class VirusOnNetwork(Model):
         self.G = nx.erdos_renyi_graph(n=self.num_nodes, p=prob)
         while not nx.is_connected(self.G):
             self.G = nx.erdos_renyi_graph(n=self.num_nodes, p=prob)
-       
+        
+        self.pos=nx.spring_layout(self.G, seed=42) 
         self.grid = mesa.space.NetworkGrid(self.G)
 
 
@@ -274,6 +275,12 @@ class VirusOnNetwork(Model):
     def add_node(self):
         new_node_id = max(self.G.nodes) + 1
         self.G.add_node(new_node_id)
+        ref_node = self.random.choice(list(self.G.nodes - {new_node_id}))
+        x, y = self.pos[ref_node]
+        self.pos[new_node_id] = (
+        x + self.random.uniform(-0.05, 0.05),
+        y + self.random.uniform(-0.05, 0.05),
+        )
         self.G.nodes[new_node_id]["agent"] = []
         self.grid.G = self.G
 
