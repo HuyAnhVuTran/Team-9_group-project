@@ -201,6 +201,9 @@ class VirusOnNetwork(Model):
             else:
                 state = State.SUSCEPTIBLE
 
+            self.susceptible_attributes = None
+            susceptible_attributes_stored = False
+
             a = VirusAgent(
                 self,
                 state,
@@ -213,6 +216,14 @@ class VirusOnNetwork(Model):
             )
             self.grid.place_agent(a, node)
 
+            if state == State.SUSCEPTIBLE and not susceptible_attributes_stored:
+                self.susceptible_attributes = {
+                    "state": state,
+                    "misinformation_spread_chance": misinformation_spread_chance,
+                    "fact_check_chance": fact_check_chance,
+                    "resistance_duration": resistance_duration,
+                    "strain": strain
+                }
 
         # infected_nodes = self.random.sample(list(self.G), initial_outbreak_size)
         # for a in self.grid.get_cell_list_contents(infected_nodes):
@@ -252,7 +263,7 @@ class VirusOnNetwork(Model):
         self.userInfected = 0
         self.botInfected = 0
 
-        if self.random.random() < 0.1:
+        if stepCount % 5 == 0 and self.random.random() < 0.3:
             self.add_node()
         self.connect_nodes(delay=4)
         
@@ -287,11 +298,14 @@ class VirusOnNetwork(Model):
         # Create and place a new agent
         agent = VirusAgent(
             self,
-            State.SUSCEPTIBLE,  
-            misinformation_spread_chance=0.4,
-            fact_check_chance=0.4,
-            resistance_duration=6, 
+            self.susceptible_attributes["state"], 
+            self.susceptible_attributes["misinformation_spread_chance"],
+            self.susceptible_attributes["fact_check_chance"],
+            self.susceptible_attributes["resistance_duration"],
+            self.susceptible_attributes["strain"]
         )
+        print(f"misinformation spread chance: {agent.misinformation_spread_chance}")
+
         self.grid.place_agent(agent, new_node_id)
         self.agents.add(agent)
         self.new_nodes.append((new_node_id, self.current_step))
