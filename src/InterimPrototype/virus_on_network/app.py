@@ -96,6 +96,20 @@ model_params = {
     "resistance_duration": Slider(label="Resistance Duration", value=6, min=1, max=10, step=1),
 }
 
+def post_process_stateplot(ax):
+    ax.set_ylim(ymin=0)
+    ax.set_ylabel("Agent Count")
+    ax.legend(loc="upper right")
+
+def post_process_infectionplot(ax):
+    ax.set_ylim(ymin=0)
+    ax.set_ylabel("Reproduction Rate")
+    ax.legend(loc="upper right")
+
+def post_process_strainplot(ax):
+    ax.set_ylim(ymin=0)
+    ax.set_ylabel("Number of Misinformed Users")
+    ax.legend(loc="upper right")
 
 SpacePlot = make_space_component(agent_portrayal)
 StatePlot = make_plot_component(
@@ -105,14 +119,18 @@ StatePlot = make_plot_component(
         "Susceptible": "#008000",          # Green
         "Resistant": "#808080",            # Gray
         "Fact Checkers": "#0000FF",        # Blue
-    }
+    },
+    post_process = post_process_stateplot
+
 )
 
 InfectionPlot = make_plot_component(
     {
-        "User Misinformation Reproduction Rate": "#FFD700",  # Yellow
-        "Bot Misinformation Reproduction Rate": "#FF0000",   # Red
-    }
+        "User Misinformation": "#FFD700",  # Yellow
+        "Bot Misinformation": "#FF0000",   # Red
+    },
+    post_process = post_process_infectionplot
+
 )
 
 StrainPlot = make_plot_component(
@@ -120,7 +138,9 @@ StrainPlot = make_plot_component(
         "Misinformed (Strain A)": "#FF4D4D",  # Red
         "Misinformed (Strain B)": "#FF8C00",  # Orange
         "Misinformed (Strain C)": "#FF66B2",  # Pink
-    }
+    },
+    post_process = post_process_strainplot
+
 )
 
 model = VirusOnNetwork()
@@ -135,10 +155,24 @@ model = VirusOnNetwork()
 
 @solara.component
 def Page():
+    # with solara.Column():
+    #     solara.Markdown("## Disclaimer")
+    #     solara.Markdown("- Squares represent bot agents.")
+    #     solara.Markdown("- Circles represent human user agents.")
     with solara.Column():
-        solara.Markdown("## Disclaimer")
-        solara.Markdown("- Squares represent bot agents.")
-        solara.Markdown("- Circles represent human user agents.")
+        with solara.Columns([1,1]):
+            with solara.Column():  # Left panel for the disclaimer
+                solara.Markdown("## Disclaimer")
+                solara.Markdown("- Squares represent bot agents.")
+                solara.Markdown("- Circles represent human user agents.")
+                solara.Markdown("- Colors represent different strains of misinformation.")
+                
+            with solara.Column():  # Right panel for the visualization
+                solara.Markdown("## Louvain Modularity")
+                solara.Markdown("- In our simulation, Louvain Modularity measures the strength of the division of the simulated Twitter network into misinformation clusters")
+                solara.Markdown("- Values between 0 - 0.3: a weaker division into clusters of misinformation")
+                solara.Markdown("- Values between 0.3 - 0.7: a moderate division into clusters of misinformation")
+                solara.Markdown("- Values between 0.7 - 1: a strong division into clusters of misinformation")
 
         solara.Markdown("---") # Add a horizontal line to separate the disclaimer
 
