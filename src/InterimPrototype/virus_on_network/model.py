@@ -164,8 +164,8 @@ class VirusOnNetwork(Model):
                 "Susceptible": number_susceptible,
                 "Resistant": number_resistant,
                 "Fact Checkers": number_fact_checkers,
-                "User Misinformation Reproduction Rate": reproduction_userInfected,
-                "Bot Misinformation Reproduction Rate": reproduction_botInfected,
+                "User Misinformation": reproduction_userInfected,
+                "Bot Misinformation": reproduction_botInfected,
                 "Global Clustering Coefficient": global_clustering, #clustering coefficient
                 # "Avg Clustering (Misinformed Users)": average_clustering_misinformed, #misinfo clusters
                 "Misinformed Cluster Strength (Louvain)": louvain_misinformed_modularity,
