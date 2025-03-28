@@ -134,7 +134,6 @@ class VirusOnNetwork(Model):
         # gain_resistance_chance=0.5,
         resistance_duration=6,
         fact_checker_ratio=0.1,
-        misinformation_bot_ratio=0.1,
         seed=None,
     ):
         super().__init__(seed=seed)
